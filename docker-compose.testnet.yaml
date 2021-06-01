@@ -1,0 +1,20 @@
+version: '3'
+services:
+  digitalbits-core-postgres:
+    image: postgres:12
+    restart: on-failure
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=digitalbits-core
+      - POSTGRES_PASSWORD=RonUQgj23En5Mmo4
+
+  digitalbits-core:
+    image: xdbfoundation/digitalbits-base:curl
+    restart: on-failure
+    volumes:
+      - core-data:/data
+      - ./digitalbits-core.testnet.cfg:/digitalbits-core.cfg
+volumes:
+  db-data:
+  core-data:
