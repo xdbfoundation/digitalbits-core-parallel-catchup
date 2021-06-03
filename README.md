@@ -20,6 +20,10 @@ and copying to destination host:
 
     docker cp catchup-result_digitalbits-core-postgres_1:/catchup-sqldump .
 
+Setup persistent database: 
+
+  docker run --name postgres -v `pwd`/postgres-data:/var/lib/postgresql/data -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
+
 Restore data to the persistent database: 
 
     PGPASSWORD=password pg_restore -h localhost -p 5432 -U postgres -d postgres -F d catchup-sqldump 
