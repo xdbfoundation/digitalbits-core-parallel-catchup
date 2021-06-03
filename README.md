@@ -1,6 +1,44 @@
 # Parallel DigitalBits Core Catchup ⚡
 
-## Background
+# Requirements 
+  
+    docker docker-compose curl jq
+
+# HOWTO 
+
+    git clone git@github.com:xdbfoundation/digitalbits-core-parallel-catchup.git
+    
+    cd digitalbits-core-parallel-catchup
+
+    ./catchup.sh docker-compose.livenet.yaml 1 `curl --silent https://frontier.livenet.digitalbits.io/ | jq .history_latest_ledger` 32768 `nproc` 2>&1 | tee logs/catchup.log
+
+After command finish one container will be still running `catchup-result_digitalbits-core-postgres_1` which runs postgresql database with blockchain data. Move data from this container to your persistent database by creating dump 
+
+      docker exec catchup-result_digitalbits-core-postgres_1 pg_dump -F d -f catchup-sqldump -j 10 -U postgres -d digitalbits-core
+
+and copying to destination host:
+
+    docker cp catchup-result_digitalbits-core-postgres_1:/catchup-sqldump .
+
+Restore data to the persistent database: 
+
+    PGPASSWORD=password pg_restore -h localhost -p 5432 -U postgres -d postgres -F d catchup-sqldump 
+
+Specify database connection info in `DATABASE` line of `digitalbits.cfg`
+
+`catchup.sh` will create `history-result` directory in current directory. `digitalbits.cfg` points to this directory in `BUCKET_DIR_PATH` and in [HISTORY.local] section. If you will move or rename `history-result` directory than reflect those changes in `digitalbits.cfg` file. Please, note, that `history-result` meant to be published on publicly available storage, like Amazon S3, for other nodes to fetch that history. 
+
+Create secret seed key for your node:
+
+    digitalbits-core gen-seed
+
+and replace secret seed in `NODE_SEED` line of the `digitalbits.cfg` 
+
+Replace `full_validator` home domain name with yours domain.
+
+Run `digitalbits-core`:
+
+    digitalbits-core --conf digitalbits.cfg run
 
 ### Goal
 

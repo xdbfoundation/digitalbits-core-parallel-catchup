@@ -1,3 +1,6 @@
 data-result
 history-result
 catchup.log
+logs/*
+!logs/.gitkeep
+catchup-sqldump
