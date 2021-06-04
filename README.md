@@ -22,7 +22,7 @@ and copying to destination host:
 
 Setup persistent database: 
 
-  docker run --name postgres -v `pwd`/postgres-data:/var/lib/postgresql/data -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
+    docker run --name postgres -v `pwd`/postgres-data:/var/lib/postgresql/data -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
 
 Restore data to the persistent database: 
 
