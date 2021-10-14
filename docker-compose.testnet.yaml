@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=RonUQgj23En5Mmo4
 
   digitalbits-core:
-    image: xdbfoundation/digitalbits-base:curl
+    image: docker.cloudsmith.io/xdb-foundation/digitalbits-core-parallel-catchup/digitalbits-core-parallel-catchup:latest
     restart: on-failure
     volumes:
       - core-data:/data
